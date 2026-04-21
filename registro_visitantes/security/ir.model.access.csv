@@ -1,0 +1,8 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_registro_visitante,registro.visitante.access,model_registro_visitante,base.group_user,1,1,1,1
+access_registro_visitante_especialidad,registro.visitante.especialidad.access,model_registro_visitante_especialidad,base.group_user,1,1,1,1
+access_visitante_perfil,visitante.perfil.access,model_visitante_perfil,base.group_user,1,1,1,1
+access_visitante_departamento,registro.visitante.departamento.access,model_registro_visitante_departamento,base.group_user,1,1,1,1
+access_visitante_dashboard,registro.visitante.dashboard.access,model_registro_visitante_dashboard,base.group_user,1,1,1,1
+access_visitante_gestion_wizard,registro.visitante.gestion.wizard.access,model_registro_visitante_gestion_wizard,base.group_user,1,1,1,1
+access_visitante_estadisticas_wizard,registro.visitante.estadisticas.wizard.access,model_registro_visitante_estadisticas_wizard,base.group_user,1,1,1,1

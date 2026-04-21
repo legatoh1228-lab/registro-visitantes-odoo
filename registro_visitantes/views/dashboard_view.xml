@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_visitor_dashboard_form" model="ir.ui.view">
+        <field name="name">registro.visitante.dashboard.form</field>
+        <field name="model">registro.visitante.dashboard</field>
+        <field name="arch" type="xml">
+            <form string="Lobby Principal" create="0" edit="0" delete="0" class="bg-light">
+                <sheet class="shadow-sm border-0 rounded-4 p-5" style="background: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%);">
+                    <div class="row w-100 text-center align-items-center justify-content-center mb-5">
+                        <div class="col-12 mb-4">
+                            <h1 class="fw-bolder text-primary display-4 mb-3" style="text-shadow: 1px 1px 2px rgba(0,0,0,0.1);">
+                                <i class="fa fa-qrcode me-2" />
+                                Sistema Integral de Visitantes
+                            </h1>
+                            <p class="text-dark fs-5 fw-normal">Seleccione rápidamente el área de trabajo para comenzar.</p>
+                        </div>
+                    </div>
+                    <div class="row w-100 text-center justify-content-center g-4">
+                        <div class="col-md-5 col-lg-3">
+                            <button name="action_open_crear_visita" type="object" class="btn btn-primary bg-gradient shadow-lg rounded-4 border-0 text-white w-100 h-100" style="padding: 40px 20px; transition: transform 0.2s;">
+                                <i class="fa fa-ticket fa-4x mb-3 d-block text-white" />
+                                <span class="fs-4 fw-bold">Nuevo Pase</span>
+                                <small class="d-block mt-2 text-white fs-6 fw-normal">Asignar entrada a visitante</small>
+                            </button>
+                        </div>
+                        <div class="col-md-5 col-lg-3">
+                            <button name="action_open_nuevas_visitas" type="object" class="btn btn-warning bg-gradient shadow-lg rounded-4 border-0 text-white w-100 h-100" style="padding: 40px 20px; transition: transform 0.2s;">
+                                <i class="fa fa-users fa-4x mb-3 d-block text-white" />
+                                <span class="fs-4 fw-bold">En Edificio</span>
+                                <small class="d-block mt-2 text-white fs-6 fw-normal">Personal con pase activo</small>
+                            </button>
+                        </div>
+                        <div class="col-md-5 col-lg-3">
+                            <button name="action_open_directorio" type="object" class="btn btn-info bg-gradient shadow-lg rounded-4 border-0 text-white w-100 h-100" style="padding: 40px 20px; transition: transform 0.2s;">
+                                <i class="fa fa-address-book-o fa-4x mb-3 d-block text-white" />
+                                <span class="fs-4 fw-bold">Directorio</span>
+                                <small class="d-block mt-2 text-white fs-6 fw-normal">Perfiles concurrentes</small>
+                            </button>
+                        </div>
+                        <div class="col-md-5 col-lg-3">
+                            <button name="action_open_configuracion" type="object" class="btn btn-dark bg-gradient shadow-lg rounded-4 border-0 text-white w-100 h-100" style="padding: 40px 20px; transition: transform 0.2s;">
+                                <i class="fa fa-building-o fa-4x mb-3 d-block text-white" />
+                                <span class="fs-4 fw-bold">Gestión</span>
+                                <small class="d-block mt-2 text-white fs-6 fw-normal">Deptos y Configuración</small>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="row w-100 text-center justify-content-center g-4 mt-2">
+                        <div class="col-md-5 col-lg-3">
+                            <button name="action_open_estadisticas" type="object" class="btn btn-success bg-gradient shadow-lg rounded-4 border-0 text-white w-100 h-100" style="padding: 40px 20px; transition: transform 0.2s;">
+                                <i class="fa fa-pie-chart fa-4x mb-3 d-block text-white" />
+                                <span class="fs-4 fw-bold">Análisis</span>
+                                <small class="d-block mt-2 text-white fs-6 fw-normal">Estadísticas Gráficas</small>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="row w-100 mt-5">
+                        <div class="col-12 text-center text-muted">
+                            <small>
+                                <i class="fa fa-shield me-1" />
+                                Protocolo de Seguridad Activo
+                            </small>
+                        </div>
+                    </div>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <!-- Wizard de Gestión (PopUp) -->
+    <record id="view_gestion_wizard_form" model="ir.ui.view">
+        <field name="name">registro.visitante.gestion.wizard.form</field>
+        <field name="model">registro.visitante.gestion.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Módulos de Gestión" class="bg-light">
+                <sheet class="text-center p-4 rounded-4 border-0 shadow-sm" style="background: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%);">
+                    <h2 class="fw-bolder mb-4 text-primary" style="text-shadow: 1px 1px 2px rgba(0,0,0,0.1);">¿Qué área desea administrar?</h2>
+                    <div class="row g-4 justify-content-center mt-2 mb-4">
+                        <div class="col-md-5">
+                            <button name="action_open_departamentos" type="object" class="btn btn-dark bg-gradient shadow-lg rounded-4 border-0 text-white w-100" style="padding: 30px 15px; transition: transform 0.2s;">
+                                <i class="fa fa-building-o fa-3x mb-2 d-block text-white" />
+                                <span class="fs-4 fw-bold">Departamentos</span>
+                            </button>
+                        </div>
+                        <div class="col-md-5">
+                            <button name="action_open_especialidades" type="object" class="btn btn-dark bg-gradient shadow-lg rounded-4 border-0 text-white w-100" style="padding: 30px 15px; transition: transform 0.2s;">
+                                <i class="fa fa-wrench fa-3x mb-2 d-block text-white" />
+                                <span class="fs-4 fw-bold">Especialidades</span>
+                            </button>
+                        </div>
+                    </div>
+                    <footer>
+                        <button string="Cerrar" class="btn-light text-muted fw-bold border-0" special="cancel" />
+                    </footer>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Wizard de Estadísticas (PopUp) -->
+    <record id="view_estadisticas_wizard_form" model="ir.ui.view">
+        <field name="name">registro.visitante.estadisticas.wizard.form</field>
+        <field name="model">registro.visitante.estadisticas.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Módulo de Estadísticas" class="bg-light">
+                <sheet class="text-center p-4 rounded-4 border-0 shadow-sm" style="background: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%);">
+                    <h2 class="fw-bolder mb-4 text-primary" style="text-shadow: 1px 1px 2px rgba(0,0,0,0.1);">¿Qué estadística desea visualizar?</h2>
+                    <div class="row g-4 justify-content-center mt-2 mb-4">
+                        <div class="col-md-4">
+                            <button name="action_open_departamento" type="object" class="btn btn-success bg-gradient shadow-lg rounded-4 border-0 text-white w-100" style="padding: 30px 15px; transition: transform 0.2s;">
+                                <i class="fa fa-pie-chart fa-3x mb-2 d-block text-white" />
+                                <span class="fs-4 fw-bold">Departamento</span>
+                            </button>
+                        </div>
+                        <div class="col-md-4">
+                            <button name="action_open_especialidad" type="object" class="btn btn-primary bg-gradient shadow-lg rounded-4 border-0 text-white w-100" style="padding: 30px 15px; transition: transform 0.2s;">
+                                <i class="fa fa-pie-chart fa-3x mb-2 d-block text-white" />
+                                <span class="fs-4 fw-bold">Especialidad</span>
+                            </button>
+                        </div>
+                        <div class="col-md-4">
+                            <button name="action_open_edad" type="object" class="btn btn-warning bg-gradient shadow-lg rounded-4 border-0 text-white w-100" style="padding: 30px 15px; transition: transform 0.2s;">
+                                <i class="fa fa-pie-chart fa-3x mb-2 d-block text-white" />
+                                <span class="fs-4 fw-bold">Por Edad</span>
+                            </button>
+                        </div>
+                    </div>
+                    <footer>
+                        <button string="Cerrar" class="btn-light text-muted fw-bold border-0" special="cancel" />
+                    </footer>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <!-- Server Action -->
+    <record id="action_visitor_dashboard_launch" model="ir.actions.server">
+        <field name="name">Lobby Dashboard</field>
+        <field name="model_id" ref="registro_visitantes.model_registro_visitante_dashboard" />
+        <field name="state">code</field>
+        <field name="code">action = model.action_init_dashboard()</field>
+    </record>
+    <!-- Nuevo Botón Menu Principal del Dashboard -->
+    <menuitem id="menu_registro_visitantes_dashboard" name="Lobby Principal" parent="menu_registro_visitantes_root" action="action_visitor_dashboard_launch" sequence="1" />
+</odoo>

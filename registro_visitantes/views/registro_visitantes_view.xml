@@ -1,0 +1,295 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Kanban View -->
+    <record id="view_registro_visitante_kanban" model="ir.ui.view">
+        <field name="name">registro.visitante.kanban</field>
+        <field name="model">registro.visitante</field>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_mobile" sample="1">
+                <field name="name" />
+                <field name="image_1920" />
+                <field name="visitante_nombre" />
+                <field name="tipo_documento" />
+                <field name="documento" />
+                <field name="empresa_procedencia" />
+                <field name="estado" />
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_global_click o_kanban_record_has_image_fill shadow-sm rounded-3 border-0">
+                            <t t-if="record.image_1920.raw_value">
+                                <div t-attf-style="background-image:url('#{kanban_image('registro.visitante', 'image_1920', record.id.raw_value)}')" class="o_kanban_image_fill_left d-none d-md-block" />
+                            </t>
+                            <t t-else="">
+                                <div class="o_kanban_image_fill_left d-none d-md-block" style="background-image:url('/web/static/img/avatar_grey.png')" />
+                            </t>
+                            <div class="oe_kanban_details">
+                                <div class="o_kanban_record_top">
+                                    <div class="o_kanban_record_headings">
+                                        <strong class="o_kanban_record_title">
+                                            <field name="visitante_nombre" />
+                                        </strong>
+                                    </div>
+                                </div>
+                                <div class="mt-1">
+                                    <span class="text-muted">
+                                        <field name="tipo_documento" />
+                                        -
+                                        <field name="documento" />
+                                    </span>
+                                </div>
+                                <div t-if="record.empresa_procedencia.value" class="mt-1">
+                                    <i class="fa fa-building-o" title="Empresa" aria-label="Empresa" />
+                                    <span class="ms-1">
+                                        <field name="empresa_procedencia" />
+                                    </span>
+                                </div>
+                                <div class="o_kanban_record_bottom mt-2">
+                                    <div class="oe_kanban_bottom_left">
+                                        <span class="fw-bold">
+                                            <field name="name" />
+                                        </span>
+                                    </div>
+                                    <div class="oe_kanban_bottom_right">
+                                        <field name="estado" widget="label_selection" options="{'classes': {'borrador': 'default', 'proceso': 'warning', 'salida': 'success'}}" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+    <!-- Form View -->
+    <record id="view_registro_visitante_form" model="ir.ui.view">
+        <field name="name">registro.visitante.form</field>
+        <field name="model">registro.visitante</field>
+        <field name="arch" type="xml">
+            <form string="Registro de Visitante">
+                <header>
+                    <button name="action_iniciar_visita" string="Iniciar Visita" type="object" class="btn-success text-white fw-bold px-4" invisible="estado != 'borrador'" icon="fa-sign-in" />
+                    <button name="action_marcar_salida" string="Marcar Salida" type="object" class="btn-danger text-white fw-bold px-4" invisible="estado != 'proceso'" icon="fa-sign-out" />
+                    <button name="%(registro_visitantes.action_report_registro_visitante)d" string="Imprimir Constancia" type="action" class="btn-secondary" icon="fa-print" />
+                    <field name="estado" widget="statusbar" statusbar_visible="borrador,proceso,salida" />
+                </header>
+                <sheet class="shadow-sm rounded-4 border-0 p-4 bg-white">
+                    <!-- Visual Ribbons -->
+                    <widget name="web_ribbon" title="En Visita" bg_color="text-bg-warning" invisible="estado != 'proceso'" />
+                    <widget name="web_ribbon" title="Finalizado" bg_color="text-bg-success" invisible="estado != 'salida'" />
+                    
+                    <div class="row mb-3 bg-light rounded-3 p-3 border">
+                        <div class="col-12">
+                            <h4 class="text-primary fw-bold mb-3"><i class="fa fa-user-plus me-2"/>Tipo de Ingreso</h4>
+                            <field name="tipo_registro" widget="radio" class="fw-bold fw-lg" options="{'horizontal': true}"/>
+                            <div invisible="tipo_registro == 'nuevo'" class="mt-2">
+                                <field name="perfil_id" required="tipo_registro == 'recurrente'" options="{'no_create': True}" placeholder="🔍 Buscar por nombre o número de documento..." class="w-100 fs-5"/>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row align-items-center mb-4 pb-3 border-bottom">
+                        <div class="col-md-2 text-center">
+                            <field name="image_1920" widget="image" class="oe_avatar shadow-sm rounded-circle border border-2 border-primary" options="{'preview_image': 'image_1920'}" />
+                        </div>
+                        <div class="col-md-10">
+                            <h3 class="text-muted fw-light mb-0">Pase #<field name="name" readonly="1" class="text-dark fw-bold"/></h3>
+                            <h1 class="text-primary fw-bolder mt-1" style="font-size: 2.2rem;">
+                                <field name="visitante_nombre" placeholder="Nombre completo del visitante" readonly="estado == 'salida' or tipo_registro == 'recurrente'" force_save="1" />
+                            </h1>
+                        </div>
+                    </div>
+
+                    <div class="row mt-4">
+                        <div class="col-md-6 border-end pe-4">
+                            <h4 class="text-secondary fw-bold mb-3"><i class="fa fa-id-card-o me-2 text-primary"/> Información Personal</h4>
+                            <group>
+                                <label string="Identificación" for="tipo_documento" />
+                                <div class="o_row">
+                                    <field name="tipo_documento" readonly="estado == 'salida' or tipo_registro == 'recurrente'" force_save="1" class="oe_inline fw-bold text-dark" />
+                                    -
+                                    <field name="documento" readonly="estado == 'salida' or tipo_registro == 'recurrente'" force_save="1" placeholder="Ej: 12345678" class="oe_inline" />
+                                </div>
+                                <field name="fecha_nacimiento" readonly="estado == 'salida' or tipo_registro == 'recurrente'" force_save="1" />
+                                <field name="edad" readonly="1" force_save="1" />
+                                <field name="empresa_procedencia" readonly="estado == 'salida' or tipo_registro == 'recurrente'" force_save="1" placeholder="Ej: Empresa X C.A." />
+                                <field name="especialidad_id" readonly="estado == 'salida' or tipo_registro == 'recurrente'" force_save="1" placeholder="Seleccione profesión/oficio..." />
+                            </group>
+                        </div>
+                        
+                        <div class="col-md-6 ps-4">
+                            <h4 class="text-secondary fw-bold mb-3"><i class="fa fa-map-marker me-2 text-warning"/> Detalles de Recepción</h4>
+                            <group>
+                                <field name="departamento_id" readonly="estado == 'salida'" placeholder="Área que visita..."/>
+                                <field name="motivo" readonly="estado == 'salida'" placeholder="Razón principal de la visita..."/>
+                                <field name="gafete" readonly="estado == 'salida'" placeholder="Nº de Gafete Asignado" class="fw-bold text-danger"/>
+                            </group>
+                            
+                            <hr class="mt-4 mb-3"/>
+                            
+                            <h4 class="text-secondary fw-bold mb-3"><i class="fa fa-clock-o me-2 text-info"/> Tiempos</h4>
+                            <group>
+                                <field name="fecha_entrada" readonly="estado == 'salida'" />
+                                <field name="fecha_salida" readonly="1" invisible="estado != 'salida'" />
+                                <field name="duracion_visita" readonly="1" invisible="estado != 'salida'" class="fw-bold text-danger"/>
+                            </group>
+                        </div>
+                    </div>
+
+                    <div class="row mt-4 pt-3 border-top">
+                        <div class="col-12">
+                            <h4 class="text-secondary fw-bold mb-3"><i class="fa fa-car me-2 text-success"/> Control de Ingresos Extras</h4>
+                            <group col="2">
+                                <group>
+                                    <field name="placa_vehiculo" readonly="estado == 'salida'" placeholder="Ej: AB123CD"/>
+                                </group>
+                                <group>
+                                    <field name="equipos_ingresados" readonly="estado == 'salida'" placeholder="Detalle computadoras, herramientas, bolsos ingresados..." rows="2"/>
+                                </group>
+                            </group>
+                        </div>
+                    </div>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <!-- List View -->
+    <record id="view_registro_visitante_list" model="ir.ui.view">
+        <field name="name">registro.visitante.list</field>
+        <field name="model">registro.visitante</field>
+        <field name="arch" type="xml">
+            <list string="Visitantes">
+                <field name="image_1920" widget="image" options="{'size': [30, 30]}" optional="show" />
+                <field name="name" />
+                <field name="fecha_entrada" />
+                <field name="tipo_documento" />
+                <field name="documento" />
+                <field name="visitante_nombre" />
+                <field name="empresa_procedencia" optional="show" />
+                <field name="departamento_id" />
+                <field name="gafete" optional="show" />
+                <field name="estado" widget="badge" decoration-success="estado=='salida'" decoration-info="estado=='proceso'" />
+            </list>
+        </field>
+    </record>
+
+    <!-- Graph View -->
+    <record id="view_registro_visitante_graph" model="ir.ui.view">
+        <field name="name">registro.visitante.graph</field>
+        <field name="model">registro.visitante</field>
+        <field name="arch" type="xml">
+            <graph string="Análisis de Visitas" type="pie">
+                <field name="departamento_id"/>
+            </graph>
+        </field>
+    </record>
+
+    <!-- Search View (Exportaciones y Análisis) -->
+    <record id="view_registro_visitante_search" model="ir.ui.view">
+        <field name="name">registro.visitante.search</field>
+        <field name="model">registro.visitante</field>
+        <field name="arch" type="xml">
+            <search string="Búsqueda Inteligente">
+                <!-- Por qué atributos se podrá encauzar la búsqueda rápida por teclado -->
+                <field name="name" string="ID/Documento" filter_domain="['|', ('name', 'ilike', self), ('documento', 'ilike', self)]"/>
+                <field name="visitante_nombre"/>
+                <field name="empresa_procedencia"/>
+                <field name="departamento_id"/>
+
+                <separator/>
+                <filter string="En Progreso" name="filtrar_proceso" domain="[('estado','=','proceso')]"/>
+                <filter string="Ya Salieron" name="filtrar_salida" domain="[('estado','=','salida')]"/>
+                <filter string="Borradores" name="filtrar_borrador" domain="[('estado','=','borrador')]"/>
+                
+                <group expand="0" string="Agrupar y Exportar Por">
+                    <filter string="Estado de la Visita" name="groupby_estado" context="{'group_by':'estado'}"/>
+                    <filter string="Empresa de Procedencia" name="groupby_empresa" context="{'group_by':'empresa_procedencia'}"/>
+                    <filter string="Departamento Visitado" name="groupby_departamento" context="{'group_by':'departamento_id'}"/>
+                    <filter string="Especialidad" name="groupby_especialidad" context="{'group_by':'especialidad_id'}"/>
+                    <filter string="Edad del Visitante" name="groupby_edad" context="{'group_by':'edad'}"/>
+                    <filter string="Fecha de Entrada" name="groupby_fecha" context="{'group_by':'fecha_entrada:day'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Action: Historial de Pases -->
+    <record id="action_registro_visitante" model="ir.actions.act_window">
+        <field name="name">Historial de Pases</field>
+        <field name="res_model">registro.visitante</field>
+        <field name="view_mode">kanban,list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Crea tu primer Registro de Visitante</p>
+            <p>Lleva un control detallado e incluye fotografía, motivo de visita y registro vehicular.</p>
+        </field>
+    </record>
+
+    <!-- Action: Visitas en Edificio -->
+    <record id="action_registro_visitante_proceso" model="ir.actions.act_window">
+        <field name="name">En Edificio</field>
+        <field name="res_model">registro.visitante</field>
+        <field name="view_mode">kanban,list,form</field>
+        <field name="domain">[('estado', '=', 'proceso')]</field>
+    </record>
+
+    <!-- Action: Directorio -->
+    <record id="action_visitante_perfil" model="ir.actions.act_window">
+        <field name="name">Directorio de Visitantes</field>
+        <field name="res_model">visitante.perfil</field>
+        <field name="view_mode">kanban,list,form</field>
+    </record>
+
+    <!-- Menus: Estructura Alineada con el Dashboard -->
+    <menuitem id="menu_registro_visitantes_root" name="Visitantes" sequence="10" />
+
+    <!-- 1. Lobby Principal (Agregado desde dashboard_view.xml con sequence=1) -->
+
+    <!-- 2. Pases y Edificio -->
+    <menuitem id="menu_registro_visitantes_pases_root" name="Pases" parent="menu_registro_visitantes_root" sequence="10" />
+    <menuitem id="menu_registro_visitantes_nuevo" name="Historial de Pases" parent="menu_registro_visitantes_pases_root" action="action_registro_visitante" sequence="10" />
+    <menuitem id="menu_registro_visitantes_proceso" name="En Edificio" parent="menu_registro_visitantes_pases_root" action="action_registro_visitante_proceso" sequence="20" />
+
+    <!-- 3. Directorio -->
+    <menuitem id="menu_visitantes_directorio" name="Directorio" parent="menu_registro_visitantes_root" action="action_visitante_perfil" sequence="20" />
+
+    <!-- 4. Gestión (Configuración base) -->
+    <menuitem id="menu_visitantes_gestion" name="Gestión" parent="menu_registro_visitantes_root" sequence="30" />
+
+    <!-- Vistas de Especialidades y Departamentos -->
+    <record id="view_visitante_especialidad_tree" model="ir.ui.view">
+        <field name="name">registro.visitante.especialidad.tree</field>
+        <field name="model">registro.visitante.especialidad</field>
+        <field name="arch" type="xml">
+            <list string="Especialidades" editable="bottom">
+                <field name="name"/>
+                <field name="active" widget="boolean_toggle"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="action_visitante_especialidad" model="ir.actions.act_window">
+        <field name="name">Especialidades</field>
+        <field name="res_model">registro.visitante.especialidad</field>
+        <field name="view_mode">list</field>
+    </record>
+
+    <menuitem id="menu_visitantes_especialidad" name="Especialidades" parent="menu_visitantes_gestion" action="action_visitante_especialidad" sequence="10"/>
+
+    <record id="view_visitante_departamento_tree" model="ir.ui.view">
+        <field name="name">registro.visitante.departamento.tree</field>
+        <field name="model">registro.visitante.departamento</field>
+        <field name="arch" type="xml">
+            <list string="Departamentos" editable="bottom">
+                <field name="name"/>
+                <field name="active" widget="boolean_toggle"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="action_visitante_departamento" model="ir.actions.act_window">
+        <field name="name">Departamentos</field>
+        <field name="res_model">registro.visitante.departamento</field>
+        <field name="view_mode">list</field>
+    </record>
+
+    <menuitem id="menu_visitantes_departamento" name="Departamentos" parent="menu_visitantes_gestion" action="action_visitante_departamento" sequence="20"/>
+</odoo>

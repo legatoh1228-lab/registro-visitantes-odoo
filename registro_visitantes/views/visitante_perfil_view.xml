@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Kanban View para Perfiles -->
+    <record id="view_visitante_perfil_kanban" model="ir.ui.view">
+        <field name="name">visitante.perfil.kanban</field>
+        <field name="model">visitante.perfil</field>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_mobile" sample="1">
+                <field name="id"/>
+                <field name="image_1920"/>
+                <field name="visitante_nombre"/>
+                <field name="tipo_documento"/>
+                <field name="documento"/>
+                <field name="empresa_procedencia"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_global_click o_kanban_record_has_image_fill shadow-sm rounded-3 border-0 bg-white" style="transition: all 0.2s ease;">
+                            <t t-if="record.image_1920.raw_value">
+                                <div t-attf-style="background-image:url('#{kanban_image('visitante.perfil', 'image_1920', record.id.raw_value)}')" class="o_kanban_image_fill_left d-none d-md-block rounded-start-3" />
+                            </t>
+                            <t t-else="">
+                                <div class="o_kanban_image_fill_left d-none d-md-block rounded-start-3" style="background-image:url('/web/static/img/avatar_grey.png')" />
+                            </t>
+                            <div class="oe_kanban_details p-3">
+                                <div class="o_kanban_record_top mb-2">
+                                    <div class="o_kanban_record_headings">
+                                        <strong class="o_kanban_record_title fs-5 text-primary fw-bold">
+                                            <field name="visitante_nombre" />
+                                        </strong>
+                                    </div>
+                                </div>
+                                <div class="mb-1 text-muted">
+                                    <i class="fa fa-id-card-o me-1"/>
+                                    <field name="tipo_documento" /> - <field name="documento" />
+                                </div>
+                                <div t-if="record.empresa_procedencia.value" class="text-secondary mt-2">
+                                    <i class="fa fa-building-o text-info me-1" title="Empresa" aria-label="Empresa" />
+                                    <field name="empresa_procedencia" />
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <!-- Form View para Perfiles -->
+    <record id="view_visitante_perfil_form" model="ir.ui.view">
+        <field name="name">visitante.perfil.form</field>
+        <field name="model">visitante.perfil</field>
+        <field name="arch" type="xml">
+            <form string="Perfil del Visitante">
+                <sheet class="shadow-sm rounded-4 border-0 p-4 bg-white">
+                    <div class="row align-items-center mb-4 pb-3 border-bottom">
+                        <div class="col-md-2 text-center">
+                            <field name="image_1920" widget="image" class="oe_avatar shadow-sm rounded-circle border border-2 border-primary" options="{'preview_image': 'image_1920'}" />
+                        </div>
+                        <div class="col-md-10">
+                            <h1 class="text-primary fw-bolder mb-1" style="font-size: 2.2rem;">
+                                <field name="visitante_nombre" placeholder="Nombre completo del visitante" />
+                            </h1>
+                            <div class="d-flex align-items-center mt-2">
+                                <span class="badge rounded-pill text-bg-info px-3 py-2 fs-6 shadow-sm"><i class="fa fa-star me-1"/> Directorio Libre</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row mt-3">
+                        <div class="col-12">
+                            <h3 class="text-secondary fw-bold mb-4 fs-4"><i class="fa fa-user-circle me-2 text-primary"/> Detalles del Perfil</h3>
+                            <group>
+                                <group>
+                                    <label string="Identificación" for="tipo_documento" />
+                                    <div class="o_row">
+                                        <field name="tipo_documento" class="oe_inline fw-bold text-dark"/> - <field name="documento" placeholder="12345678" class="oe_inline"/>
+                                    </div>
+                                    <field name="fecha_nacimiento"/>
+                                </group>
+                                <group>
+                                    <field name="empresa_procedencia" placeholder="Empresa que representa..."/>
+                                    <field name="especialidad_id" placeholder="Ej. Plomería, Mantenimiento..."/>
+                                </group>
+                            </group>
+                        </div>
+                    </div>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- List View para Perfiles -->
+    <record id="view_visitante_perfil_list" model="ir.ui.view">
+        <field name="name">visitante.perfil.list</field>
+        <field name="model">visitante.perfil</field>
+        <field name="arch" type="xml">
+            <list string="Directorio de Visitantes" default_order="visitante_nombre asc">
+                <field name="image_1920" widget="image" options="{'size': [30, 30]}" optional="show" />
+                <field name="visitante_nombre"/>
+                <field name="tipo_documento"/>
+                <field name="documento"/>
+                <field name="empresa_procedencia"/>
+                <field name="especialidad_id" optional="show"/>
+            </list>
+        </field>
+    </record>
+
+</odoo>

@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Report Action -->
+    <record id="action_report_registro_visitante" model="ir.actions.report">
+        <field name="name">Constancia de Visita</field>
+        <field name="model">registro.visitante</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">registro_visitantes.report_visitante_template</field>
+        <field name="report_file">registro_visitantes.report_visitante_template</field>
+        <field name="print_report_name">'Visita_%s' % (object.name)</field>
+        <field name="binding_model_id" ref="registro_visitantes.model_registro_visitante"/>
+        <field name="binding_type">report</field>
+    </record>
+
+    <!-- Report Template -->
+    <template id="report_visitante_template">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="doc">
+                <t t-call="web.external_layout">
+                    <div class="page">
+                        <div class="text-center" style="margin-bottom: 20px;">
+                            <h2>Constancia de Visita</h2>
+                            <h4><span t-field="doc.name"/></h4>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-4 text-center">
+                                <t t-if="doc.image_1920">
+                                    <img t-att-src="image_data_uri(doc.image_1920)" style="max-height: 200px; max-width: 100%; border: 1px solid #ccc; padding: 5px;" alt="Fotografía"/>
+                                </t>
+                            </div>
+                            <div class="col-8">
+                                <table class="table table-sm table-borderless">
+                                    <tbody>
+                                        <tr>
+                                            <td style="width: 30%"><strong>Nombre:</strong></td>
+                                            <td><span t-field="doc.visitante_nombre"/></td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Identificación:</strong></td>
+                                            <td><span t-field="doc.tipo_documento"/> - <span t-field="doc.documento"/></td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Edad:</strong></td>
+                                            <td><span t-field="doc.edad"/> Años</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Empresa de Procedencia:</strong></td>
+                                            <td><span t-field="doc.empresa_procedencia"/></td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Departamento a Visitar:</strong></td>
+                                            <td><span t-field="doc.departamento_id.name"/></td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Motivo:</strong></td>
+                                            <td><span t-field="doc.motivo"/></td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Gafete Asignado:</strong></td>
+                                            <td><span t-field="doc.gafete"/></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <br/>
+                        <div class="row">
+                            <div class="col-12">
+                                <h4>Control de Accesos (Vehículos / Equipos)</h4>
+                                <table class="table table-bordered table-sm">
+                                    <tbody>
+                                        <tr>
+                                            <td style="width: 30%;"><strong>Placa de Vehículo</strong></td>
+                                            <td><span t-field="doc.placa_vehiculo"/></td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Equipos Ingresados</strong></td>
+                                            <td><span t-field="doc.equipos_ingresados"/></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <br/>
+                        <div class="row">
+                            <div class="col-12">
+                                <h4>Tiempos de la Visita</h4>
+                                <table class="table table-bordered table-sm text-center">
+                                    <thead>
+                                        <tr>
+                                            <th>Hora de Entrada</th>
+                                            <th>Hora de Salida</th>
+                                            <th>Duración Promedio</th>
+                                            <th>Estado</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td><span t-field="doc.fecha_entrada"/></td>
+                                            <td><span t-field="doc.fecha_salida"/></td>
+                                            <td><strong style="color:red;"><span t-field="doc.duracion_visita"/></strong></td>
+                                            <td><span t-field="doc.estado"/></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>
